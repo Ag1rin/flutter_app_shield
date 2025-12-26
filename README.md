@@ -1,44 +1,83 @@
+<div align="center">
+
 # Flutter Privacy Shield 🚀
 
-A simple Flutter package that prevents screenshots, blocks screen recording, and blurs sensitive content when the app is in background or app switcher.
+**A powerful & easy-to-use Flutter package** that protects your app's sensitive content from screenshots, screen recordings, and exposure in the app switcher.
+
+[![Pub Version](https://img.shields.io/pub/v/flutter_privacy_shield?logo=dart&style=flat-square)](https://pub.dev/packages/flutter_privacy_shield)
+[![Likes](https://img.shields.io/pub/likes/flutter_privacy_shield?style=flat-square)](https://pub.dev/packages/flutter_privacy_shield/score)
+[![Popularity](https://img.shields.io/pub/popularity/flutter_privacy_shield?style=flat-square)](https://pub.dev/packages/flutter_privacy_shield/score)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+
+</div>
+
+---
+
+<div align="center">
+
+### Demo Screenshots
+
+
+
+
+**Screenshot Prevention** – Android shows a black screen when trying to capture
+
+
+
+
+**Background Blur** – App preview blurred in recent apps / app switcher
+
+
+
+
+**Biometric Authentication** – Secure resume with Face ID / Touch ID / Fingerprint
+
+</div>
+
+---
 
 ## Features
-- Prevent screenshots (black screen on Android)
-- Blur screen in background/app switcher
-- Easy to use: Just wrap your app with one widget
-- **Screenshot Prevention**: Uses `no_screenshot` to disable screenshots and recordings.
-- **Background Blur**: Blurs the app preview in the app switcher using `secure_application`.
-- **Resume Authentication**: Requires local authentication (biometrics/PIN) when the app resumes.
-- **Jailbreak/Root Detection**: Blocks access on compromised devices using `flutter_jailbreak_detection`.
-- **Customizable**: Options for max auth attempts, custom builders for locked and compromised screens, and more.
-- **Cross-Platform**: Works on iOS and Android.
+
+- **Prevent Screenshots & Recordings** – Black screen on Android, protected on iOS (`no_screenshot`)
+- **Blur in Background** – Frosted blur overlay in app switcher (`secure_application`)
+- **Resume Authentication** – Require biometrics or PIN when app returns from background
+- **Root/Jailbreak Detection** – Block app on compromised devices
+- **Highly Customizable** – Custom locked screens, max attempts, auto-exit, and more
+- **Cross-Platform** – Works seamlessly on **iOS** and **Android**
 
 ## Installation
-Add to pubspec.yaml:
+
+Add to your `pubspec.yaml`:
+
 ```yaml
 dependencies:
   flutter_privacy_shield: ^0.1.0
 ```
 
-Then run `flutter pub get`.
+Then run:
 
-Note: This package depends on:
-- `secure_application`
-- `no_screenshot`
-- `flutter_jailbreak_detection`
-- `local_auth`
+```bash
+flutter pub get
+```
 
-Make sure to configure platform-specific setup:
-- For iOS: Add NSFaceIDUsageDescription to Info.plist.
-- For Android: Add permissions if needed for biometrics.
+### Required Configuration
+
+**iOS** – Add this to your `Info.plist` for biometric usage description:
+
+```xml
+<key>NSFaceIDUsageDescription</key>
+<string>This app uses biometric authentication to protect your sensitive data.</string>
+```
+
+**Android** – No extra permissions needed for core features.
 
 ## Usage
 
-Wrap your main app widget with `PrivacyShield`:
+Just wrap your app (or any widget) with `PrivacyShield`:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutter_privacy_shield/flutter_privacy_shield.dart';  
+import 'package:flutter_privacy_shield/flutter_privacy_shield.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,7 +95,7 @@ class MyApp extends StatelessWidget {
       blurAmount: 25.0,
       opacity: 0.9,
       maxAuthAttempts: 3,
-      exitOnMaxAttempts: true,  // Optionally exit app after max attempts
+      exitOnMaxAttempts: false,
       child: MaterialApp(
         title: 'Secure App',
         theme: ThemeData(primarySwatch: Colors.blue),
@@ -73,51 +112,80 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Secure Home')),
-      body: const Center(child: Text('Your secure content here')),
+      body: const Center(
+        child: Text('Your sensitive content is now fully protected! 🔒'),
+      ),
     );
   }
 }
 ```
 
-### Customization
+## Customization
 
-- **compromisedDeviceBuilder**: Provide a custom widget for the compromised device screen.
-- **lockedBuilder**: Custom builder for the locked screen.
-- **maxAttemptsMessage**: Custom message when max attempts exceeded.
-- **exitOnMaxAttempts**: Set to true to exit the app after max failed attempts (non-web only).
-
-Example with custom builders:
+Fully customize the security screens and behavior:
 
 ```dart
 PrivacyShield(
-  // ... other params
-  compromisedDeviceBuilder: Scaffold(
-    body: Center(child: Text('Custom Warning: Device is compromised!')),
+  // ... other options
+  maxAuthAttempts: 5,
+  maxAttemptsMessage: 'Too many failed attempts. App locked for security.',
+
+  // Custom warning for rooted/jailbroken devices
+  compromisedDeviceBuilder: const Scaffold(
+    backgroundColor: Colors.black,
+    body: Center(
+      child: Text(
+        'This app cannot run on rooted or jailbroken devices.',
+        style: TextStyle(color: Colors.red, fontSize: 20),
+        textAlign: TextAlign.center,
+      ),
+    ),
   ),
+
+  // Custom lock screen
   lockedBuilder: (context, controller) => Center(
     child: Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Text('Custom Locked Screen'),
+        const Icon(Icons.lock_outline, size: 80, color: Colors.white),
+        const SizedBox(height: 20),
+        const Text(
+          'Authenticate to continue',
+          style: TextStyle(color: Colors.white, fontSize: 24),
+        ),
+        const SizedBox(height: 30),
         ElevatedButton(
           onPressed: () => controller?.unlock(),
-          child: Text('Try Again'),
+          child: const Text('Unlock with Biometrics'),
         ),
       ],
     ),
   ),
+
+  child: MaterialApp(...),
 );
 ```
 
-## Development and Testing
+## Development & Testing
 
-- Test on physical devices for jailbreak/root detection.
-- For authentication, ensure device has biometrics or PIN set up.
-- On web, some features like exit(0) are disabled.
+- Test **screenshot prevention** and **root detection** only on **real devices**
+- Ensure device has biometrics or PIN set up for authentication testing
+- Some features (e.g., `exitOnMaxAttempts`) are disabled on Flutter Web
 
 ## Contributing
 
-Feel free to fork and submit PRs. Issues welcome!
+Contributions are very welcome! 🎉
+
+- Report bugs or request features via [Issues](https://github.com/yourusername/flutter_privacy_shield/issues)
+- Submit Pull Requests with improvements
 
 ## License
 
-MIT License. See LICENSE file.
+This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+Made with ❤️ for secure Flutter apps<br>
+Star this repo if you found it helpful! ⭐
+</div>
