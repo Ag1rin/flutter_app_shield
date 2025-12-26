@@ -21,16 +21,7 @@
 
 
 **Screenshot Prevention** – Android shows a black screen when trying to capture
-
-
-
-
-**Background Blur** – App preview blurred in recent apps / app switcher
-
-
-
-
-**Biometric Authentication** – Secure resume with Face ID / Touch ID / Fingerprint
+(assets/black_screen.png)
 
 </div>
 
