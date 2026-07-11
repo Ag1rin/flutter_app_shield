@@ -6,7 +6,7 @@
 
 [![Pub Version](https://img.shields.io/pub/v/flutter_app_shield?logo=dart&style=flat-square)](https://pub.dev/packages/flutter_app_shield)
 [![Likes](https://img.shields.io/pub/likes/flutter_app_shield?style=flat-square)](https://pub.dev/packages/flutter_app_shield/score)
-[![Popularity](https://img.shields.io/pub/popularity/flutter_app_shield?style=flat-square)](https://pub.dev/packages/flutter_app_shield/score)
+[![Pub Points](https://img.shields.io/pub/points/flutter_app_shield?style=flat-square)](https://pub.dev/packages/flutter_app_shield/score)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
 </div>

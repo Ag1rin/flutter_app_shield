@@ -1,3 +1,9 @@
+## [0.1.5]
+
+### Changed
+- Updated `no_screenshot` dependency constraint to `^1.1.0` to support the latest stable release
+- Replaced broken `Popularity` badge in README with `Pub Points` badge (popularity metric was removed from pub.dev)
+
 ## [0.1.4] 
 
 ### Changed
