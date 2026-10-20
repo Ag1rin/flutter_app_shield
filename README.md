@@ -151,7 +151,7 @@ AppShield(
 
 Contributions are very welcome! 🎉
 
-- Report bugs or request features via [Issues](https://github.com/Ag1rin/flutter-privacy-shield/issues)
+- Report bugs or request features via [Issues](https://github.com/Ag1rin/flutter_app_shield/issues)
 - Submit Pull Requests with improvements
 
 ## License
