@@ -1,3 +1,6 @@
+/// Flutter App Shield — screenshot prevention, background blur, and auth guards.
+library;
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';

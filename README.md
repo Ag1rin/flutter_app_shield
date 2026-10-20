@@ -26,7 +26,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_app_shield: ^0.1.4
+  flutter_app_shield: ^0.1.6
 ```
 
 Then run:
@@ -48,7 +48,7 @@ flutter pub get
 
 ## Usage
 
-Just wrap your app (or any widget) with `PrivacyShield`:
+Just wrap your app (or any widget) with `AppShield`:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PrivacyShield(
+    return AppShield(
       preventScreenshot: true,
       requireAuthOnResume: true,
       blockOnJailbreak: true,
@@ -100,7 +100,7 @@ class HomeScreen extends StatelessWidget {
 Fully customize the security screens and behavior:
 
 ```dart
-PrivacyShield(
+AppShield(
   // ... other options
   maxAuthAttempts: 5,
   maxAttemptsMessage: 'Too many failed attempts. App locked for security.',
@@ -151,7 +151,7 @@ PrivacyShield(
 
 Contributions are very welcome! 🎉
 
-- Report bugs or request features via [Issues](https://github.com/yourusername/flutter_privacy_shield/issues)
+- Report bugs or request features via [Issues](https://github.com/Ag1rin/flutter-privacy-shield/issues)
 - Submit Pull Requests with improvements
 
 ## License

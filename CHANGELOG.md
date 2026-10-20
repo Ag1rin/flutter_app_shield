@@ -1,3 +1,11 @@
+## [0.1.6]
+
+### Changed
+- Widened `no_screenshot` constraint to `>=1.2.0 <3.0.0` so the latest stable (`2.x`) is supported (restores the missing 10 pub.dev dependency points)
+- Added `repository`, `issue_tracker`, and `topics` to `pubspec.yaml`
+- Added library-level dartdoc comment
+- Fixed README examples to use `AppShield` instead of the old `PrivacyShield` name
+
 ## [0.1.5]
 
 ### Changed
