@@ -19,8 +19,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # Allows 2.x (required for full pub.dev points) while still resolving
-  # 1.2.x on older Flutter SDKs that cannot use no_screenshot 2.0+.
   no_screenshot: ">=1.2.0 <3.0.0"
   secure_application: ^4.1.0
   flutter_jailbreak_detection: ^1.10.0
