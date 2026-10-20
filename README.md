@@ -1,8 +1,8 @@
 <div align="center">
 
-# Flutter App Shield 🚀
+# Flutter App Shield
 
-**A powerful & easy-to-use Flutter package** that protects your app's sensitive content from screenshots, screen recordings, and exposure in the app switcher.
+**A powerful Flutter security wrapper** for screenshot/recording prevention, capture detection, biometric lock, inactivity auto-lock, and per-screen protection.
 
 [![Pub Version](https://img.shields.io/pub/v/flutter_app_shield?logo=dart&style=flat-square)](https://pub.dev/packages/flutter_app_shield)
 [![Likes](https://img.shields.io/pub/likes/flutter_app_shield?style=flat-square)](https://pub.dev/packages/flutter_app_shield/score)
@@ -13,23 +13,22 @@
 
 ## Features
 
-- **Prevent Screenshots & Recordings** – Black screen on Android, protected on iOS (`no_screenshot`)
-- **Blur in Background** – Frosted blur overlay in app switcher (`secure_application`)
-- **Resume Authentication** – Require biometrics or PIN when app returns from background
-- **Root/Jailbreak Detection** – Block app on compromised devices
-- **Highly Customizable** – Custom locked screens, max attempts, auto-exit, and more
-- **Cross-Platform** – Works seamlessly on **iOS** and **Android**
+- **Prevent Screenshots & Recordings** – Native prevention via `no_screenshot`
+- **Capture Detection** – Callbacks when a screenshot or recording starts/stops
+- **Blur in Background** – Frosted overlay in the app switcher (`secure_application`)
+- **Resume / Launch Auth** – Require biometrics or PIN on resume and/or first launch
+- **Inactivity Auto-Lock** – Lock after a configurable idle timeout
+- **Runtime Controller** – Lock, unlock, and toggle prevention without rebuilding
+- **SecureScope** – Protect only a sensitive page/subtree (reference-counted)
+- **Root / Jailbreak & Developer Mode** – Separate policy flags
+- **Highly Customizable** – Custom lock screens, max attempts, exit-on-fail, and more
 
 ## Installation
 
-Add to your `pubspec.yaml`:
-
 ```yaml
 dependencies:
-  flutter_app_shield: ^0.1.6
+  flutter_app_shield: ^0.2.0
 ```
-
-Then run:
 
 ```bash
 flutter pub get
@@ -37,7 +36,7 @@ flutter pub get
 
 ### Required Configuration
 
-**iOS** – Add this to your `Info.plist` for biometric usage description:
+**iOS** – Add to `Info.plist`:
 
 ```xml
 <key>NSFaceIDUsageDescription</key>
@@ -46,66 +45,69 @@ flutter pub get
 
 **Android** – No extra permissions needed for core features.
 
-## Usage
-
-Just wrap your app (or any widget) with `AppShield`:
+## Quick start
 
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_app_shield/flutter_app_shield.dart';
 
 void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppShield(
+  runApp(
+    AppShield(
       preventScreenshot: true,
       requireAuthOnResume: true,
+      requireAuthOnLaunch: false,
+      inactivityTimeout: const Duration(minutes: 1),
       blockOnJailbreak: true,
-      blurAmount: 25.0,
-      opacity: 0.9,
-      maxAuthAttempts: 3,
-      exitOnMaxAttempts: false,
-      child: MaterialApp(
-        title: 'Secure App',
-        theme: ThemeData(primarySwatch: Colors.blue),
-        home: const HomeScreen(),
-      ),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Secure Home')),
-      body: const Center(
-        child: Text('Your sensitive content is now fully protected! 🔒'),
-      ),
-    );
-  }
+      blockOnDeveloperMode: false,
+      listenToCaptureEvents: true,
+      onScreenshot: (e) => debugPrint('Screenshot at ${e.timestamp}'),
+      child: const MaterialApp(home: HomeScreen()),
+    ),
+  );
 }
 ```
 
-## Customization
+## Runtime controller
 
-Fully customize the security screens and behavior:
+```dart
+final controller = AppShieldController();
+
+AppShield(
+  controller: controller,
+  requireAuthOnResume: true,
+  child: MyApp(),
+);
+
+// Later:
+await controller.lock();
+await controller.unlock(); // runs biometric when wired by AppShield
+await controller.setScreenshotPrevention(false);
+print(controller.isLocked);
+```
+
+## Per-screen protection
+
+```dart
+Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (_) => SecureScope(
+      child: SensitivePage(),
+    ),
+  ),
+);
+```
+
+Nested `SecureScope` / `AppShield` prevention claims share a reference count, so protection stays on until the last holder is disposed.
+
+## Customization
 
 ```dart
 AppShield(
-  // ... other options
   maxAuthAttempts: 5,
   maxAttemptsMessage: 'Too many failed attempts. App locked for security.',
-
-  // Custom warning for rooted/jailbroken devices
+  authLocalizedReason: 'Unlock to continue',
   compromisedDeviceBuilder: const Scaffold(
     backgroundColor: Colors.black,
     body: Center(
@@ -116,40 +118,30 @@ AppShield(
       ),
     ),
   ),
-
-  // Custom lock screen
-  lockedBuilder: (context, controller) => Center(
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Icon(Icons.lock_outline, size: 80, color: Colors.white),
-        const SizedBox(height: 20),
-        const Text(
-          'Authenticate to continue',
-          style: TextStyle(color: Colors.white, fontSize: 24),
-        ),
-        const SizedBox(height: 30),
-        ElevatedButton(
-          onPressed: () => controller?.unlock(),
-          child: const Text('Unlock with Biometrics'),
-        ),
-      ],
+  lockedBuilder: (context, secureController) => Center(
+    child: ElevatedButton(
+      onPressed: () => secureController?.unlock(),
+      child: const Text('Unlock'),
     ),
   ),
-
   child: MaterialApp(...),
 );
 ```
 
+## Breaking change in 0.2.0
+
+`blockOnJailbreak: true` no longer blocks Android developer mode by itself.
+Use `blockOnDeveloperMode: true` if you need that behavior.
+
 ## Development & Testing
 
-- Test **screenshot prevention** and **root detection** only on **real devices**
-- Ensure device has biometrics or PIN set up for authentication testing
-- Some features (e.g., `exitOnMaxAttempts`) are disabled on Flutter Web
+- Test screenshot prevention and root detection on **real devices**
+- Ensure biometrics or a device PIN is set up for auth testing
+- `exitOnMaxAttempts` is disabled on Flutter Web
 
 ## Contributing
 
-Contributions are very welcome! 🎉
+Contributions are welcome.
 
 - Report bugs or request features via [Issues](https://github.com/Ag1rin/flutter_app_shield/issues)
 - Submit Pull Requests with improvements
@@ -157,10 +149,3 @@ Contributions are very welcome! 🎉
 ## License
 
 This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
-
----
-
-<div align="center">
-Made with ❤️ for secure Flutter apps<br>
-Star this repo if you found it helpful! ⭐
-</div>

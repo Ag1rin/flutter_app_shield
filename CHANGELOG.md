@@ -1,3 +1,25 @@
+## [0.2.0]
+
+### Added
+- `AppShieldController` for runtime lock / unlock / screenshot toggles
+- Screenshot and screen-recording detection via `listenToCaptureEvents` + callbacks (`onScreenshot`, `onScreenRecordingStarted`, `onScreenRecordingStopped`)
+- `CaptureEvent` / `CaptureDetector` public types
+- Inactivity auto-lock with `inactivityTimeout`
+- `requireAuthOnLaunch` for biometric/PIN auth at startup
+- `SecureScope` for per-page / subtree screenshot prevention (reference-counted)
+- `blockOnDeveloperMode` separate from `blockOnJailbreak`
+- `DeviceSecurity` / `DeviceSecurityStatus` helpers
+- Unit tests for controller, inactivity watcher, device policy, and prevention ref-counting
+- Stronger example demo with event log and SecureScope page
+
+### Changed
+- Split library into `lib/src/` modules with a clean public export surface
+- `blockOnJailbreak` no longer implicitly blocks Android developer mode
+- Bumped package description and documentation for the 0.2 API
+
+### Breaking
+- `blockOnJailbreak: true` alone no longer blocks Android developer mode — set `blockOnDeveloperMode: true` if you need the previous combined behavior
+
 ## [0.1.6]
 
 ### Changed
