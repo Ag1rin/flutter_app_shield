@@ -14,11 +14,7 @@ class CaptureEvent {
   final String? sourceApp;
 
   /// Creates a [CaptureEvent].
-  const CaptureEvent({
-    required this.timestamp,
-    this.detail,
-    this.sourceApp,
-  });
+  const CaptureEvent({required this.timestamp, this.detail, this.sourceApp});
 
   /// Builds a [CaptureEvent] from a [ScreenshotSnapshot].
   factory CaptureEvent.fromSnapshot(ScreenshotSnapshot snapshot) {
